@@ -12,10 +12,12 @@
     <main>
         <div id="container">
             <div>
-                <div>
+                <div class="landing-page-title">
                     <h1 style="text-align: center;">Temporary Title</h1>
                     <p id="enterBirthday">Please enter your birth date:</p>
-                    <input type="text" class="datepicker">
+                    <div class="birthdate">
+                        <input type="text" class="datepicker">
+                    </div>
                     <button>Submit</button>
                 </div>
             </div>
@@ -32,7 +34,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
         $(document).ready(function(){
-    $('.datepicker').datepicker(yearRange);
+    $('.datepicker').datepicker({yearRange: 100});
   });
     </script>
 </body>
