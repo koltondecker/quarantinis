@@ -3,27 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
     <title>Project 1 - Template Title</title>
 </head>
 <body>
     <main>
-        <h1>Drink Your Sorrows Away!</h1>
         <div id="container">
-            <div id="row">
-                <div id="col s1">
-
+            <div>
+                <div>
+                    <h1 style="text-align: center;">Temporary Title</h1>
+                    <p id="enterBirthday">Please enter your birth date:</p>
+                    <input type="text" class="datepicker">
+                    <button>Submit</button>
                 </div>
             </div>
 
         </div>
         <div id="container">
-            <div id="row">
-                <div id="col s1">
+            <div>
+                <div>
 
                 </div>
         </div>
     </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        $(document).ready(function(){
+    $('.datepicker').datepicker(yearRange);
+  });
+    </script>
 </body>
 </html>

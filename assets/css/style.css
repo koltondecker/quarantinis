@@ -1,9 +1,14 @@
 /* Hello everybody I hope you have a great day today. */
 
 h1 {
-    font-style: italic;
+    display: flex;
+    text-align: center;
 }
 
 .container {
     font-family: Arial, Helvetica, sans-serif;
+}
+
+.enterBirthday{
+    
 }
