@@ -62,12 +62,31 @@ $(document).ready(function() {
         var recipeDiv = $("#response-data");
 
         //TODO: Need to fix issue with random number generator for cocktail recipe pulling up same recipe more than once.
-        var currentRecipesArray = [];
+        var currentRandomNumberArray = [];
         
-        for(i = 0; i < recipeCount; i++) {
-            var randomNumber = Math.floor(Math.random() * response.drinks.length);
+        if(response.drinks.length <= recipeCount) {
+            for(i = 0; i < response.drinks.length; i++) {
+                recipeAjaxCall(i);
+            };
+        }
+        else {
+            for(i = 0; i < recipeCount; i++) {
+                var randomNumber = generateRandomNumber();
+                function generateRandomNumber() {
+                    randomNumber = Math.floor(Math.random() * response.drinks.length);
+                    if(currentRandomNumberArray.includes(randomNumber)) {
+                        generateRandomNumber();
+                    }
+                    else {
+                        currentRandomNumberArray.push(randomNumber);
+                        recipeAjaxCall(randomNumber);
+                    }
+                }
+            } 
+        }
 
-            var queryUrl = "https://the-cocktail-db.p.rapidapi.com/lookup.php?i=" + response.drinks[randomNumber].idDrink;
+        function recipeAjaxCall(i) {
+            var queryUrl = "https://the-cocktail-db.p.rapidapi.com/lookup.php?i=" + response.drinks[i].idDrink;
 
             $.ajax({
                 "async": true,
