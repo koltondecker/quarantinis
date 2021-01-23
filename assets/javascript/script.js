@@ -1,13 +1,27 @@
 $(document).ready(function() {
 
+    $("#modal1").modal();
     var liquorArray = ["Vodka", "Gin", "Bourbon", "Whiskey", "Tequila", "Beer", "Wine"];
     var temporaryRecipeArray = [];
     var savedRecipesArray = [];
 
-    loadLiquors();
+ 
+    
+        loadLiquors();
 
     //Materialize method call that runs the datepicker for the landing page with a range of 100 years passed in.
-    $('.datepicker').datepicker({yearRange: 100, format: "yyyymmdd"});
+    $('.datepicker').datepicker({yearRange: 10, format: "yyyymmdd"});
+    
+    $("#submit-birthday").on("click", function() {
+        var usersBirthday = $("#user-birthday").val();
+        console.log(usersBirthday);
+        var age = moment().diff(moment(usersBirthday, "YYYYMMDD"), "years");
+        console.log(age);
+        if(age < 21){
+        $("#modal1").modal("open");
+        }
+    });
+    
 
     //Materialize method call that runs the sidenav bar when page shrinks to mobile size.
     $('.sidenav').sidenav();
