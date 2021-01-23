@@ -1,8 +1,11 @@
 $(document).ready(function() {
 
     $("#modal1").modal();
-
     var liquorArray = ["Vodka", "Gin", "Bourbon", "Whiskey", "Tequila", "Beer", "Wine"];
+    var temporaryRecipeArray = [];
+    var savedRecipesArray = [];
+
+ 
     
         loadLiquors();
 
@@ -53,7 +56,7 @@ $(document).ready(function() {
 
     //TODO: Add functionality to the card button.
     $(document).on("click", ".save-recipe", function() {
-        
+        console.log("hello");
     });
     
     //Liquor list is dynamically loaded with this function using array of liquors at top. 
@@ -73,10 +76,11 @@ $(document).ready(function() {
     // created card and appended to the page.
     function addRecipeToPage(response, recipeCount) {
         var recipeDiv = $("#response-data");
+        var currentRecipeObject;
 
         //TODO: Need to fix issue with random number generator for cocktail recipe pulling up same recipe more than once.
         var currentRandomNumberArray = [];
-        
+
         if(response.drinks.length <= recipeCount) {
             for(i = 0; i < response.drinks.length; i++) {
                 recipeAjaxCall(i);
@@ -98,6 +102,16 @@ $(document).ready(function() {
             } 
         }
 
+        function sendRecipesToTempArray(currentRecipeObject) {
+            var recipeName = currentRecipeObject.strDrink;
+            var currentRecipeObject = {
+                name: recipeName,
+                recipeObject: currentRecipeObject
+            }
+            temporaryRecipeArray.push(currentRecipeObject);
+            console.log(temporaryRecipeArray);
+        }
+
         function recipeAjaxCall(i) {
             var queryUrl = "https://the-cocktail-db.p.rapidapi.com/lookup.php?i=" + response.drinks[i].idDrink;
 
@@ -110,25 +124,27 @@ $(document).ready(function() {
                     "x-rapidapi-key": "d27507a0ccmsh9a6fcf79498d5ffp1c8025jsndb62b327bc90",
                     "x-rapidapi-host": "the-cocktail-db.p.rapidapi.com"
                 }
-            }).done(function (response) {
-                console.log(response);
+            }).done(function (fullRecipeResponse) {
+                console.log(fullRecipeResponse);
 
                 var newCardDiv = $("<div>").addClass("card");
 
                 var newCardImageDiv = $("<div>").addClass("card-image");
                 var drinkImage = $("<img>");
-                drinkImage.attr("src", response.drinks[0].strDrinkThumb);
+                drinkImage.attr("src", fullRecipeResponse.drinks[0].strDrinkThumb);
 
-                var newTitleSpan = $("<span>").addClass("card-title").text(response.drinks[0].strDrink);
+                var newTitleSpan = $("<span>").addClass("card-title").text(fullRecipeResponse.drinks[0].strDrink);
 
                 newCardImageDiv.html("<a class='save-recipe btn-floating halfway-fab waves-effect waves-light red'><i class='material-icons'>add</i></a>").append(drinkImage, newTitleSpan)
 
                 var newCardContentDiv = $("<div>").addClass("card-content");
-                var cardContentPTag = $("<p>").text(response.drinks[0].strInstructions);
+                var cardContentPTag = $("<p>").text(fullRecipeResponse.drinks[0].strInstructions);
                 newCardContentDiv.append(cardContentPTag);
 
                 newCardDiv.append(newCardImageDiv, newCardContentDiv);
                 recipeDiv.append(newCardDiv);
+                
+                sendRecipesToTempArray(fullRecipeResponse.drinks[0]);
             });
         }
     }
