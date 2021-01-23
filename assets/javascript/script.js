@@ -1,27 +1,36 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
     $("#modal1").modal();
     var liquorArray = ["Vodka", "Gin", "Bourbon", "Whiskey", "Tequila", "Beer", "Wine"];
     var temporaryRecipeArray = [];
     var savedRecipesArray = [];
 
- 
-    
-        loadLiquors();
+
+
+    loadLiquors();
 
     //Materialize method call that runs the datepicker for the landing page with a range of 100 years passed in.
-    $('.datepicker').datepicker({yearRange: 10, format: "yyyymmdd"});
-    
-    $("#submit-birthday").on("click", function() {
+    $('.datepicker').datepicker({ yearRange: 100, format: "yyyymmdd" });
+
+    $("#submit-birthday").on("click", function () {
         var usersBirthday = $("#user-birthday").val();
         console.log(usersBirthday);
         var age = moment().diff(moment(usersBirthday, "YYYYMMDD"), "years");
         console.log(age);
-        if(age < 21){
-        $("#modal1").modal("open");
+        if (usersBirthday !== "") {
+            if (age < 21) {
+                $("#modal1").modal("open");
+            }
+
+            else {
+                window.location.href = "./assets/html/homepage.html";
+            }
+
         }
+
+
     });
-    
+
 
     //Materialize method call that runs the sidenav bar when page shrinks to mobile size.
     $('.sidenav').sidenav();
@@ -30,14 +39,14 @@ $(document).ready(function() {
     $('select').formSelect();
 
     //On click of the go button, the ajax call starts and takes value of liquor selector as input.
-    $("#submitButton").on("click", function() {
+    $("#submitButton").on("click", function () {
         $("#response-data").empty();
 
         var liquorSelection = $("#liquor-list").val();
         var recipeCount = $("#recipe-count").val();
-        
+
         var queryUrl = "https://the-cocktail-db.p.rapidapi.com/filter.php?i=" + liquorSelection;
-    
+
         $.ajax({
             "async": true,
             "crossDomain": true,
@@ -49,19 +58,19 @@ $(document).ready(function() {
             }
         }).done(function (response) {
             console.log(response);
-            
+
             addRecipeToPage(response, recipeCount);
         });
     });
 
     //TODO: Add functionality to the card button.
-    $(document).on("click", ".save-recipe", function() {
+    $(document).on("click", ".save-recipe", function () {
         console.log("hello");
     });
-    
+
     //Liquor list is dynamically loaded with this function using array of liquors at top. 
     function loadLiquors() {
-        for(i = 0; i < liquorArray.length; i++) {
+        for (i = 0; i < liquorArray.length; i++) {
             var newOption = $("<option>");
             newOption.addClass("liquor");
             newOption.attr("value", liquorArray[i]);
@@ -81,17 +90,17 @@ $(document).ready(function() {
         //TODO: Need to fix issue with random number generator for cocktail recipe pulling up same recipe more than once.
         var currentRandomNumberArray = [];
 
-        if(response.drinks.length <= recipeCount) {
-            for(i = 0; i < response.drinks.length; i++) {
+        if (response.drinks.length <= recipeCount) {
+            for (i = 0; i < response.drinks.length; i++) {
                 recipeAjaxCall(i);
             };
         }
         else {
-            for(i = 0; i < recipeCount; i++) {
+            for (i = 0; i < recipeCount; i++) {
                 var randomNumber = generateRandomNumber();
                 function generateRandomNumber() {
                     randomNumber = Math.floor(Math.random() * response.drinks.length);
-                    if(currentRandomNumberArray.includes(randomNumber)) {
+                    if (currentRandomNumberArray.includes(randomNumber)) {
                         generateRandomNumber();
                     }
                     else {
@@ -99,7 +108,7 @@ $(document).ready(function() {
                         recipeAjaxCall(randomNumber);
                     }
                 }
-            } 
+            }
         }
 
         function sendRecipesToTempArray(currentRecipeObject) {
@@ -143,7 +152,7 @@ $(document).ready(function() {
 
                 newCardDiv.append(newCardImageDiv, newCardContentDiv);
                 recipeDiv.append(newCardDiv);
-                
+
                 sendRecipesToTempArray(fullRecipeResponse.drinks[0]);
             });
         }
