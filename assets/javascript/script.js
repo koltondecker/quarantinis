@@ -5,6 +5,7 @@ $(document).ready(function () {
     var liquorArray = ["Vodka", "Gin", "Bourbon", "Whiskey", "Tequila", "Beer", "Wine"];
     var temporaryRecipeArray = [];
     var savedRecipesArray = [];
+    var indexOfSavedRecipe;
 
     loadLiquors();
 
@@ -32,6 +33,20 @@ $(document).ready(function () {
     //Materialize method call that runs the selector forms.
     $('select').formSelect();
 
+
+
+    //Liquor list is dynamically loaded with this function using array of liquors at top. 
+    function loadLiquors() {
+        for (i = 0; i < liquorArray.length; i++) {
+            var newOption = $("<option>");
+            newOption.addClass("liquor");
+            newOption.attr("value", liquorArray[i]);
+            newOption.text(liquorArray[i]);
+
+            $("#liquor-list").append(newOption);
+        }
+    }
+
     //On click of the go button, the ajax call starts and takes value of liquor selector as input.
     $("#submitButton").on("click", function () {
         $("#response-data").empty();
@@ -56,63 +71,6 @@ $(document).ready(function () {
             addRecipeToPage(response, recipeCount);
         });
     });
-
-    //TODO: Add functionality to the card button.
-    $(document).on("click", ".open-recipe", function () {
-        // clearRecipeModal();
-
-        $("#modal-recipe-div").modal("open");
-
-        var currentRecipe;
-
-        for(i = 0; i < temporaryRecipeArray.length; i++) {
-            if(temporaryRecipeArray[i].name === this.dataset.value) {
-                currentRecipe = temporaryRecipeArray[i].recipeObject;
-            }
-        }
-
-        $("#modal-recipe-image").attr("src", currentRecipe.strDrinkThumb);
-
-        $("#modal-recipe-name").text(currentRecipe.strDrink);
-
-        var ingredientCount = 1;
-        var ingredientProp;
-        while(currentRecipe[ingredientProp] !== null) {
-            ingredientProp = "strIngredient" + ingredientCount;
-
-            var measureProp = "strMeasure" + ingredientCount;
-
-            if(currentRecipe[ingredientProp] !== null && currentRecipe[measureProp] !== null) {
-                var newIngredientsListItem = $("<li>").text(currentRecipe[ingredientProp] + " - " + currentRecipe[measureProp]);
-            }
-            else if(currentRecipe[measureProp] !== null) {
-                var newIngredientsListItem = $("<li>").text(currentRecipe[ingredientProp]);
-            }
-            $("#modal-recipe-ingredients").append(newIngredientsListItem);
-            ingredientCount++;
-        }
-
-        $("#modal-recipe-instructions").text(currentRecipe.strInstructions);
-    });
-
-    function clearRecipeModal() {
-        $("#modal-recipe-image").removeClass("src");
-        $("#modal-recipe-name").empty();
-        $("#modal-recipe-ingredients").empty();
-        $("#modal-recipe-instructions").empty();
-    }
-    
-    //Liquor list is dynamically loaded with this function using array of liquors at top. 
-    function loadLiquors() {
-        for (i = 0; i < liquorArray.length; i++) {
-            var newOption = $("<option>");
-            newOption.addClass("liquor");
-            newOption.attr("value", liquorArray[i]);
-            newOption.text(liquorArray[i]);
-
-            $("#liquor-list").append(newOption);
-        }
-    }
 
     //This function takes the response from the original ajax call and uses a random number generator to pick a recipe from the response object.
     //The recipe is then passed through a new ajax call that uses the id to get the full recipe information. All info is passed into a dynamically 
@@ -191,5 +149,135 @@ $(document).ready(function () {
         }
     }
 
+    //TODO: Add functionality to the card button.
+    $(document).on("click", ".open-recipe", function () {
+        // clearRecipeModal();
 
+        $("#modal-recipe-div").modal("open");
+
+        var currentRecipe;
+
+        for (i = 0; i < temporaryRecipeArray.length; i++) {
+            if (temporaryRecipeArray[i].name === this.dataset.value) {
+                indexOfSavedRecipe = i;
+                currentRecipe = temporaryRecipeArray[i].recipeObject;
+            }
+        }
+
+        $("#modal-recipe-image").attr("src", currentRecipe.strDrinkThumb);
+
+        $("#modal-recipe-name").text(currentRecipe.strDrink);
+
+        var ingredientCount = 1;
+        var ingredientProp;
+        while (currentRecipe[ingredientProp] !== null) {
+            ingredientProp = "strIngredient" + ingredientCount;
+
+            var measureProp = "strMeasure" + ingredientCount;
+
+            if (currentRecipe[ingredientProp] !== null && currentRecipe[measureProp] !== null) {
+                var newIngredientsListItem = $("<li>").text(currentRecipe[ingredientProp] + " - " + currentRecipe[measureProp]);
+            }
+            else if (currentRecipe[measureProp] !== null) {
+                var newIngredientsListItem = $("<li>").text(currentRecipe[ingredientProp]);
+            }
+            $("#modal-recipe-ingredients").append(newIngredientsListItem);
+            ingredientCount++;
+        }
+
+        $("#modal-recipe-instructions").text(currentRecipe.strInstructions);
+    });
+
+    $(document).on("click", "#save-recipe-button", function () {
+        var localStorageArray = JSON.parse(localStorage.getItem("savedRecipesArray"));
+        console.log(localStorageArray);
+
+        if(localStorageArray !== null) {
+            savedRecipesArray = localStorageArray;
+        }
+        
+        savedRecipesArray.push(temporaryRecipeArray[indexOfSavedRecipe]);
+        
+        localStorage.setItem("savedRecipesArray", JSON.stringify(savedRecipesArray));
+
+    });
+
+    function clearRecipeModal() {
+        $("#modal-recipe-image").removeClass("src");
+        $("#modal-recipe-name").empty();
+        $("#modal-recipe-ingredients").empty();
+        $("#modal-recipe-instructions").empty();
+    }
+
+
+    if (document.URL.includes("saved-recipes.html")) {
+        $(document).ready(function() {
+
+            var savedRecipesArray = JSON.parse(localStorage.getItem("savedRecipesArray"));
+
+            loadList();
+
+            $("#view-switch").on("click", function() {
+
+                var switchState = $("#view-switch").prop("checked");
+                console.log(switchState);
+                if(switchState) {
+                    //Card View!!!
+                    $("#saved-recipes").empty();
+                    loadCards();
+                }
+                else {
+                    //List View!!!
+                    $("#saved-recipes").empty();
+                    loadList();
+                }
+
+            });
+
+            function loadCards() {
+
+                for(i = 0; i < savedRecipesArray.length; i++) {
+
+                    var newCardDiv = $("<div>").addClass("card");
+
+                    var newCardImageDiv = $("<div>").addClass("card-image");
+                    var drinkImage = $("<img>");
+                    drinkImage.attr("src", savedRecipesArray[i].recipeObject.strDrinkThumb);
+
+                    var newTitleSpan = $("<span>").addClass("card-title").text(savedRecipesArray[i].recipeObject.strDrink);
+
+                    newCardImageDiv.html("<a class='open-recipe btn-floating halfway-fab waves-effect waves-light red' href='#modal-recipe-div'data-value=" + JSON.stringify(savedRecipesArray[i].recipeObject.strDrink) + "><i class='material-icons'>add</i></a>").append(drinkImage, newTitleSpan)
+
+                    var newCardContentDiv = $("<div>").addClass("card-content");
+                    var cardContentPTag = $("<p>").text(savedRecipesArray[i].recipeObject.strInstructions);
+                    newCardContentDiv.append(cardContentPTag);
+
+                    newCardDiv.append(newCardImageDiv, newCardContentDiv);
+                    $("#saved-recipes").append(newCardDiv);
+                
+                }
+            }
+
+            function loadList() {
+                
+                var newTable = $("<table>");
+                var newTableHead = newTable.html("<thead><tr><th>Recipe Name</th><th>Another List Item</th><th>And another</th></tr></thead>");
+                var newTableBody = $("<tbody>");
+                var anotherListItemPlaceholder = "stuff here";
+                var andAnother = "more stuff here";
+                
+                for(i = 0; i < savedRecipesArray.length; i++) {
+                    var newTR = $("<tr>");
+                    newTR.html("<td>" + savedRecipesArray[i].name + "</td><td>" + anotherListItemPlaceholder + "</td><td>" + andAnother + "</td>");
+                    newTableBody.append(newTR);
+                }
+
+                newTable.append(newTableHead, newTableBody);
+
+                $("#saved-recipes").append(newTable);
+                
+            }
+
+        });
+    }
 });
