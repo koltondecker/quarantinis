@@ -2,6 +2,7 @@ $(document).ready(function () {
     $("#modal1").modal();
     $("#modal-recipe-div").modal();
 
+    var currentDay = new Date("yyyy-MM-dd hh:mm:ss");
     var liquorArray = ["Vodka", "Gin", "Bourbon", "Whiskey", "Tequila", "Beer", "Wine"];
     var temporaryRecipeArray = [];
     var savedRecipesArray = [];
@@ -10,12 +11,12 @@ $(document).ready(function () {
     loadLiquors();
 
     //Materialize method call that runs the datepicker for the landing page with a range of 100 years passed in.
-    $('.datepicker').datepicker({ yearRange: 100, format: "yyyymmdd" });
+    $('.datepicker').datepicker({ maxDate: currentDay });
 
     $("#submit-birthday").on("click", function () {
         var usersBirthday = $("#user-birthday").val();
         console.log(usersBirthday);
-        var age = moment().diff(moment(usersBirthday, "YYYYMMDD"), "years");
+        var age = moment().diff(moment(usersBirthday, "LL"), "years");
         console.log(age);
         if (usersBirthday !== "") {
             if (age < 21) {
@@ -278,6 +279,79 @@ $(document).ready(function () {
                 
             }
 
+        });
+    }
+
+
+    if(document.URL.includes("local-breweries.html")) {
+        $(document).ready(function() {
+
+            var localBreweriesArray = [];
+
+            breweriesAPICall();
+
+            function breweriesAPICall() {
+
+                var state = "Kansas";
+                var city = "Kansas City";
+                var perPage = "";
+                var queryURL = "https://brianiswu-open-brewery-db-v1.p.rapidapi.com/breweries?per_page=50&by_city=" + city;
+                
+                $.ajax({
+
+                    "async": true,
+                    "crossDomain": true,
+                    "url": queryURL,
+                    "method": "GET",
+                    "headers": {
+                        "x-rapidapi-key": "d27507a0ccmsh9a6fcf79498d5ffp1c8025jsndb62b327bc90",
+                        "x-rapidapi-host": "brianiswu-open-brewery-db-v1.p.rapidapi.com"
+                    }
+
+                }).done(function (response) {
+
+                    console.log(response);
+
+                    for(i = 0; i < response.length; i++) {
+
+                        var breweryLocationObject = {};
+
+                        breweryLocationObject.lat = response[i].latitude;
+                        breweryLocationObject.lng = response[i].longitude;
+
+                        if(breweryLocationObject.lat !== null && breweryLocationObject.lng !== null) {
+                            localBreweriesArray.push(breweryLocationObject);
+                        }
+                        
+                    }
+                    
+                    console.log(localBreweriesArray);
+                    generateMapMarkers();
+                    
+                });
+            }
+
+            // Add the following to local-breweries.html file:
+            //<link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-gl-js/v0.4.0/mapquest-gl.css"/>
+            //<div id="map" style="width: 100%; height: 530px;"></div>
+            // <script src="https://api.mqcdn.com/sdk/mapquest-gl-js/v0.4.0/mapquest-gl.js"></script>
+
+            function generateMapMarkers() {
+
+                var map = new mqgl.Map('map', '7XSOhvWh4m4dhAyhCMD2uBfSYK2XqGxv', {
+                    zoom: 13,
+                  });
+
+                map.load(function() {
+                    
+                    for(i = 0; i < localBreweriesArray.length; i++) {
+                        map.icons.marker.add(localBreweriesArray[i]);
+                    }
+
+                    map.fitBounds();
+
+                  });
+            }
         });
     }
 });
