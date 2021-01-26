@@ -27,10 +27,18 @@
 
 nav {
     background-color: #3c3f58;
+    margin-bottom: 50px;
 }
 
 #body {
     background-color: #7077930a;
+}
+
+
+#homepage-container {
+    
+    align-content: center;
+
 }
 
 #submitButton {
@@ -58,5 +66,18 @@ nav {
 }
 
 #centering-again {
+
+}
+
+#liquor-list-div {
+    width: 50%;
+}
+
+#category-list {
+    width: 50%;
+}
+
+#modal-stuff {
+    padding-left: 23px;
 
 }
