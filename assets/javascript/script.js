@@ -247,7 +247,7 @@ $(document).ready(function () {
 
                     var newTitleSpan = $("<span>").addClass("card-title").text(savedRecipesArray[i].recipeObject.strDrink);
 
-                    newCardImageDiv.html("<a class='open-recipe btn-floating halfway-fab waves-effect waves-light red' href='#modal-recipe-div'data-value=" + JSON.stringify(savedRecipesArray[i].recipeObject.strDrink) + "><i class='material-icons'>add</i></a>").append(drinkImage, newTitleSpan)
+                    newCardImageDiv.html("<a class='open-recipe btn-floating halfway-fab waves-effect waves-light  red' href='#modal-recipe-div'data-value=" + JSON.stringify(savedRecipesArray[i].recipeObject.strDrink) + "><i class='material-icons'>add</i></a>").append(drinkImage, newTitleSpan)
 
                     var newCardContentDiv = $("<div>").addClass("card-content");
                     var cardContentPTag = $("<p>").text(savedRecipesArray[i].recipeObject.strInstructions);
