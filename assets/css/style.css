@@ -1,12 +1,13 @@
 /* Hello everybody I hope you have a great day today. */
-body {
+#landing-page-body {
     background-image: url("../images/1663374.jpg");
 }
 
+#enterBirthday {
+    font-family: Arial, Helvetica, sans-serif;
+}
 .container {
     font-family: Arial, Helvetica, sans-serif;
-    margin: 0;
-    padding: 0;
 }
 
 .landing-page-title {
@@ -19,14 +20,43 @@ body {
 
 }
 
-/* h1 {
-    display: flex;
-    text-align: center;
-} */
-
-
-
-#enterBirthday{
+#enterBirthday {
     font-style: bold;
     font-size: 2rem;
+}
+
+nav {
+    background-color: #3c3f58;
+}
+
+#body {
+    background-color: #7077930a;
+}
+
+#submitButton {
+    background-color: #2e3047;
+}
+
+#submit-button {
+    padding-left: 11px;
+}
+
+#website-logo {
+    padding-left: 21px;
+}
+
+#search-local-breweries {
+    background-color:  #2e3047;
+}
+
+#insert-city-name {
+    color:  #2e3047;
+}
+
+#centering-map {
+
+}
+
+#centering-again {
+
 }
