@@ -283,17 +283,23 @@ $(document).ready(function () {
     }
 
 
-    if(document.URL.includes("local-breweries.html")) {
+    if(document.URL.includes("breweries.html")) {
         $(document).ready(function() {
 
             var localBreweriesArray = [];
 
-            breweriesAPICall();
+            var map = new mqgl.Map('map', '7XSOhvWh4m4dhAyhCMD2uBfSYK2XqGxv', {
+                zoom: 3,
+            });
 
+            $("#search-local-breweries").on("click", function() {
+                breweriesAPICall();
+            });
+            
             function breweriesAPICall() {
 
                 var state = "Kansas";
-                var city = "Kansas City";
+                var city = $("#city-name").val();
                 var perPage = "";
                 var queryURL = "https://brianiswu-open-brewery-db-v1.p.rapidapi.com/breweries?per_page=50&by_city=" + city;
                 
@@ -326,31 +332,19 @@ $(document).ready(function () {
                     }
                     
                     console.log(localBreweriesArray);
-                    generateMapMarkers();
+                    addMarkers();
                     
                 });
             }
 
-            // Add the following to local-breweries.html file:
-            //<link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-gl-js/v0.4.0/mapquest-gl.css"/>
-            //<div id="map" style="width: 100%; height: 530px;"></div>
-            // <script src="https://api.mqcdn.com/sdk/mapquest-gl-js/v0.4.0/mapquest-gl.js"></script>
-
-            function generateMapMarkers() {
-
-                var map = new mqgl.Map('map', '7XSOhvWh4m4dhAyhCMD2uBfSYK2XqGxv', {
-                    zoom: 13,
-                  });
-
-                map.load(function() {
+            function addMarkers() {
                     
-                    for(i = 0; i < localBreweriesArray.length; i++) {
-                        map.icons.marker.add(localBreweriesArray[i]);
-                    }
+                for(i = 0; i < localBreweriesArray.length; i++) {
+                    map.icons.marker.add(localBreweriesArray[i]);
+                }
 
-                    map.fitBounds();
+                map.fitBounds();
 
-                  });
             }
         });
     }
