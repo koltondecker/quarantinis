@@ -337,11 +337,6 @@ $(document).ready(function () {
                 });
             }
 
-            // Add the following to local-breweries.html file:
-            //<link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-gl-js/v0.4.0/mapquest-gl.css"/>
-            //<div id="map" style="width: 100%; height: 530px;"></div>
-            // <script src="https://api.mqcdn.com/sdk/mapquest-gl-js/v0.4.0/mapquest-gl.js"></script>
-
             function addMarkers() {
                     
                 for(i = 0; i < localBreweriesArray.length; i++) {
