@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- <link rel="stylesheet" href="assets/css/style.css"> -->
+    <link rel="stylesheet" href="../css/style.css">
     <title>Document</title>
 </head>
-<body>
+<body id="body">
   <nav>
     <div class="nav-wrapper">
-      <a href="#!" class="brand-logo">Logo</a>
+      <a href="#!" class="brand-logo" id="website-logo">Alcohol Website</a>
       <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul class="right hide-on-med-and-down">
         <li><a href="saved-recipes.html">Saved Recipes</a></li>
@@ -25,9 +25,9 @@
       </ul>
     </div>
   </nav>
-  <main class="container">
+  <main class="container" id="homepage-container">
     <div class="row">
-      <div class="col s12">
+      <div class="col s12" id="input-div">
         <div id="liquor-list-div" class="input-field col s12">
           <select id="liquor-list"></select>
           <label>Choose your liquor</label>
@@ -40,13 +40,15 @@
           </select>
           <label></label>
         </div>
+        <div id="submit-button">
         <button id="submitButton" class="btn waves-effect waves-light" type="submit" name="action">Get Litty
           <i class="material-icons right">send</i>
         </button>
       </div>
+      </div>
     </div>
     <div class="row">
-      <div class="col s12 m6">
+      <div class="col s12 m6" id="modal-stuff">
         <div id="response-data"></div>
         <div id="modal-recipe-div" class="modal">
           <div class="modal-content">
