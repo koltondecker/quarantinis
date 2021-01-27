@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-gl-js/v0.4.0/mapquest-gl.css"/>
+    <script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.css"/>
     <link rel="stylesheet" href="../css/style.css">
     <title>Breweries</title>
 </head>
@@ -37,13 +38,23 @@
                     </button>
                 </div>
                 <div id="map" style="width: 100%; height: 530px;" class="breweries-map"></div>
+                <div id="list-div">
+                    <table>
+                        <thead>
+                            <th>Brewery Name</th>
+                            <th>Type</th>
+                            <th>Address</th>
+                            <th>Website</th>
+                        </thead>
+                        <tbody id="brewery-list-body"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script src="https://api.mqcdn.com/sdk/mapquest-gl-js/v0.4.0/mapquest-gl.js"></script>
     <script src="../javascript/script.js"> </script>
 </body>
 </html>

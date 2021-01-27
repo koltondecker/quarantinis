@@ -3,6 +3,8 @@ $(document).ready(function () {
     $("#modal-recipe-div").modal();
 
     var currentDay = new Date("yyyy-MM-dd hh:mm:ss");
+    var oneHundredYearsPast = new Date();
+    oneHundredYearsPast.setFullYear(oneHundredYearsPast.getFullYear() - 100);
     var liquorArray = ["Vodka", "Gin", "Bourbon", "Whiskey", "Tequila", "Beer", "Wine"];
     var temporaryRecipeArray = [];
     var savedRecipesArray = [];
@@ -11,7 +13,7 @@ $(document).ready(function () {
     loadLiquors();
 
     //Materialize method call that runs the datepicker for the landing page with a range of 100 years passed in.
-    $('.datepicker').datepicker({ maxDate: currentDay });
+    $('.datepicker').datepicker({ yearRange: 100, minDate: oneHundredYearsPast, maxDate: new Date() });
 
     $("#submit-birthday").on("click", function () {
         var usersBirthday = $("#user-birthday").val();
@@ -134,12 +136,12 @@ $(document).ready(function () {
                 var drinkImage = $("<img>");
                 drinkImage.attr("src", fullRecipeResponse.drinks[0].strDrinkThumb);
 
-                var newTitleSpan = $("<span>").addClass("card-title").text(fullRecipeResponse.drinks[0].strDrink);
+                // var newTitleSpan = $("<span>").addClass("card-title").text(fullRecipeResponse.drinks[0].strDrink);
 
-                newCardImageDiv.html("<a class='open-recipe btn-floating halfway-fab waves-effect waves-light red' href='#modal-recipe-div'data-value=" + JSON.stringify(fullRecipeResponse.drinks[0].strDrink) + "><i class='material-icons'>add</i></a>").append(drinkImage, newTitleSpan)
+                newCardImageDiv.html("<a class='open-recipe btn-floating halfway-fab waves-effect waves-light red' href='#modal-recipe-div'data-value=" + JSON.stringify(fullRecipeResponse.drinks[0].strDrink) + "><i class='material-icons'>add</i></a>").append(drinkImage)
 
                 var newCardContentDiv = $("<div>").addClass("card-content");
-                var cardContentPTag = $("<p>").text(fullRecipeResponse.drinks[0].strInstructions);
+                var cardContentPTag = $("<p>").text(fullRecipeResponse.drinks[0].strDrink).addClass("center");
                 newCardContentDiv.append(cardContentPTag);
 
                 newCardDiv.append(newCardImageDiv, newCardContentDiv);
@@ -245,12 +247,12 @@ $(document).ready(function () {
                     var drinkImage = $("<img>");
                     drinkImage.attr("src", savedRecipesArray[i].recipeObject.strDrinkThumb);
 
-                    var newTitleSpan = $("<span>").addClass("card-title").text(savedRecipesArray[i].recipeObject.strDrink);
+                    // var newTitleSpan = $("<span>").addClass("card-title").text(savedRecipesArray[i].recipeObject.strDrink);
 
-                    newCardImageDiv.html("<a class='open-recipe btn-floating halfway-fab waves-effect waves-light  red' href='#modal-recipe-div'data-value=" + JSON.stringify(savedRecipesArray[i].recipeObject.strDrink) + "><i class='material-icons'>add</i></a>").append(drinkImage, newTitleSpan)
+                    newCardImageDiv.html("<a class='open-recipe btn-floating halfway-fab waves-effect waves-light red' href='#modal-recipe-div'data-value=" + JSON.stringify(savedRecipesArray[i].recipeObject.strDrink) + "><i class='material-icons'>add</i></a>").append(drinkImage);
 
                     var newCardContentDiv = $("<div>").addClass("card-content");
-                    var cardContentPTag = $("<p>").text(savedRecipesArray[i].recipeObject.strInstructions);
+                    var cardContentPTag = $("<p>").text(savedRecipesArray[i].recipeObject.strDrink).addClass("center");
                     newCardContentDiv.append(cardContentPTag);
 
                     newCardDiv.append(newCardImageDiv, newCardContentDiv);
@@ -261,21 +263,74 @@ $(document).ready(function () {
 
             function loadList() {
                 
-                var newTable = $("<table>");
-                var newTableHead = newTable.html("<thead><tr><th>Recipe Name</th><th>Another List Item</th><th>And another</th></tr></thead>");
-                var newTableBody = $("<tbody>");
-                var anotherListItemPlaceholder = "stuff here";
-                var andAnother = "more stuff here";
+                //! Original table version
+                // var newTable = $("<table>");
+                // var newTableHead = newTable.html("<thead><tr><th>Recipe Name</th><th>Another List Item</th><th>And another</th></tr></thead>");
+                // var newTableBody = $("<tbody>");
+                // var anotherListItemPlaceholder = "stuff here";
+                // var andAnother = "more stuff here";
                 
-                for(i = 0; i < savedRecipesArray.length; i++) {
-                    var newTR = $("<tr>");
-                    newTR.html("<td>" + savedRecipesArray[i].name + "</td><td>" + anotherListItemPlaceholder + "</td><td>" + andAnother + "</td>");
-                    newTableBody.append(newTR);
+                // for(i = 0; i < savedRecipesArray.length; i++) {
+                //     var newTR = $("<tr>");
+                //     newTR.html("<td>" + savedRecipesArray[i].name + "</td><td>" + anotherListItemPlaceholder + "</td><td>" + andAnother + "</td>");
+                //     newTableBody.append(newTR);
+                // }
+
+                // newTable.append(newTableHead, newTableBody);
+
+                //Todo Trying a collapsible list instead.
+                for(i = 0; i< savedRecipesArray.length; i++) {
+                    console.log(savedRecipesArray[i].recipeObject.strMeasure1);
+                }
+                
+
+                var newUl = $("<ul>").addClass("collapsible");
+
+                for(i = 0; i < savedRecipesArray.length; i++ ) {
+
+                    var newLi = $("<li>");
+
+                    var headerDiv = $("<div>").addClass("collapsible-header center");
+                    headerDiv.text(savedRecipesArray[i].name);
+
+                    var bodyDiv = $("<div>").addClass("collapsible-body center");
+                    
+                    var drinkImage = $("<img>");
+                    drinkImage.attr("src", savedRecipesArray[i].recipeObject.strDrinkThumb);
+
+                    var ingredientsList = $("<ul>");
+
+                    var ingredientCount = 1;
+                    var ingredientProp;
+                    while (savedRecipesArray[i].recipeObject[ingredientProp] !== null) {
+                        ingredientProp = "strIngredient" + ingredientCount;
+            
+                        var measureProp = "strMeasure" + ingredientCount;
+            
+                        if (savedRecipesArray[i].recipeObject[ingredientProp] !== null && savedRecipesArray[i].recipeObject[measureProp] !== null) {
+                            var newIngredientsListItem = $("<li>").text(savedRecipesArray[i].recipeObject[ingredientProp] + " - " + savedRecipesArray[i].recipeObject[measureProp]);
+                        }
+                        else if (savedRecipesArray[i].recipeObject[measureProp] !== null) {
+                            var newIngredientsListItem = $("<li>").text(savedRecipesArray[i].recipeObject[ingredientProp]);
+                        }
+                        ingredientsList.append(newIngredientsListItem);
+                        ingredientCount++;
+                    }
+
+                    var instructionsPTag = $("<p>");
+                    instructionsPTag.text(savedRecipesArray[i].recipeObject.strInstructions);
+
+                    bodyDiv.append(drinkImage, ingredientsList, instructionsPTag);
+
+                    newLi.append(headerDiv, bodyDiv);
+
+                    newUl.append(newLi);
                 }
 
-                newTable.append(newTableHead, newTableBody);
-
-                $("#saved-recipes").append(newTable);
+                $("#saved-recipes").append(newUl);
+                $(document).ready(function() {
+                    $('.collapsible').collapsible();
+                });
                 
             }
 
@@ -288,9 +343,17 @@ $(document).ready(function () {
 
             var localBreweriesArray = [];
 
-            var map = new mqgl.Map('map', '7XSOhvWh4m4dhAyhCMD2uBfSYK2XqGxv', {
-                zoom: 3,
+            L.mapquest.key = '7XSOhvWh4m4dhAyhCMD2uBfSYK2XqGxv';
+    
+            var map = L.mapquest.map('map', {
+                center: [37.7749, -122.4194],
+                layers: L.mapquest.tileLayer('map'),
+                zoom: 3
             });
+
+            
+
+            // map.addControl(L.mapquest.control());
 
             $("#search-local-breweries").on("click", function() {
                 breweriesAPICall();
@@ -322,8 +385,8 @@ $(document).ready(function () {
 
                         var breweryLocationObject = {};
 
-                        breweryLocationObject.lat = response[i].latitude;
-                        breweryLocationObject.lng = response[i].longitude;
+                        breweryLocationObject.lat = JSON.parse(response[i].latitude);
+                        breweryLocationObject.lon = JSON.parse(response[i].longitude);
 
                         if(breweryLocationObject.lat !== null && breweryLocationObject.lng !== null) {
                             localBreweriesArray.push(breweryLocationObject);
@@ -332,18 +395,74 @@ $(document).ready(function () {
                     }
                     
                     console.log(localBreweriesArray);
-                    addMarkers();
+                    // addMarkers();
+                    addListOfBreweries(response);
                     
                 });
             }
 
+            //! This needs to be fixed and I can't figure it out!!!
             function addMarkers() {
-                    
+                console.log(map);
+                // layerGroup.clearLayers();
+
+                // var layerGroup = L.layerGroup().addTo(map);
+
                 for(i = 0; i < localBreweriesArray.length; i++) {
-                    map.icons.marker.add(localBreweriesArray[i]);
+
+                    var latlng = L.latLng(localBreweriesArray[i]);
+
+                    console.log(localBreweriesArray[i]);
+
+                    L.marker([localBreweriesArray[i]], {
+                        icon: L.mapquest.icons.marker(),
+                        draggable: false
+                      }).bindPopup("").addTo(map);
+
                 }
 
-                map.fitBounds();
+                // map.fitBounds();
+
+            }
+
+            function addListOfBreweries(response) {
+
+                $("#brewery-list-body").empty();
+
+                for(i = 0; i < response.length; i++) {
+                    
+                    var newTR = $("<tr>")
+
+                    var nameTd = $("<td>");
+                    nameTd.text(response[i].name);
+
+                    var typeTd = $("<td>");
+                    typeTd.text(response[i].brewery_type);
+
+                    var addressTd = $("<td>");
+                    if(response[i].street === "") {
+                        addressTd.text("unavailable");
+                    }
+                    else {
+                        addressTd.text(response[i].street + ", " + response[i].city + ", " + response[i].state + " " + response[i].postal_code.slice(0, 5));
+                    }
+
+                    var websiteTd = $("<td>");
+                    var websiteATag = $("<a>");
+                    if(response[i].website_url === "") {
+                        websiteATag.text("unavailable");
+                    }
+                    else {
+                        websiteATag.attr("href", response[i].website_url);
+                        websiteATag.text(response[i].website_url);
+                    }
+                    websiteTd.append(websiteATag);
+
+                    newTR.append(nameTd, typeTd, addressTd, websiteTd);
+
+                    $("#brewery-list-body").append(newTR);
+
+                }
 
             }
         });
