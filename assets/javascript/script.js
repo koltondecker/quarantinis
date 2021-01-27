@@ -141,7 +141,7 @@ $(document).ready(function () {
                 newCardImageDiv.html("<a class='open-recipe btn-floating halfway-fab waves-effect waves-light red' href='#modal-recipe-div'data-value=" + JSON.stringify(fullRecipeResponse.drinks[0].strDrink) + "><i class='material-icons'>add</i></a>").append(drinkImage)
 
                 var newCardContentDiv = $("<div>").addClass("card-content");
-                var cardContentPTag = $("<p>").text(fullRecipeResponse.drinks[0].strDrink).addClass("center");
+                var cardContentPTag = $("<p>").text(fullRecipeResponse.drinks[0].strDrink).addClass("center").attr("id", "card-recipe-name");
                 newCardContentDiv.append(cardContentPTag);
 
                 newCardDiv.append(newCardImageDiv, newCardContentDiv);
@@ -252,7 +252,7 @@ $(document).ready(function () {
                     newCardImageDiv.html("<a class='open-recipe btn-floating halfway-fab waves-effect waves-light red' href='#modal-recipe-div'data-value=" + JSON.stringify(savedRecipesArray[i].recipeObject.strDrink) + "><i class='material-icons'>add</i></a>").append(drinkImage);
 
                     var newCardContentDiv = $("<div>").addClass("card-content");
-                    var cardContentPTag = $("<p>").text(savedRecipesArray[i].recipeObject.strDrink).addClass("center");
+                    var cardContentPTag = $("<p>").text(savedRecipesArray[i].recipeObject.strDrink).addClass("center").attr("id", "card-recipe-name");
                     newCardContentDiv.append(cardContentPTag);
 
                     newCardDiv.append(newCardImageDiv, newCardContentDiv);
@@ -296,7 +296,7 @@ $(document).ready(function () {
                     var bodyDiv = $("<div>").addClass("collapsible-body center");
                     
                     var drinkImage = $("<img>");
-                    drinkImage.attr("src", savedRecipesArray[i].recipeObject.strDrinkThumb);
+                    drinkImage.attr("src", savedRecipesArray[i].recipeObject.strDrinkThumb).attr("id", "saved-recipe-image");
 
                     var ingredientsList = $("<ul>");
 
