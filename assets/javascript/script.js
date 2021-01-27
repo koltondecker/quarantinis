@@ -226,12 +226,12 @@ $(document).ready(function () {
                 console.log(switchState);
                 if(switchState) {
                     //Card View!!!
-                    $("#saved-recipes").empty();
+                    $("#saved-recipes-list-view").empty();
                     loadCards();
                 }
                 else {
                     //List View!!!
-                    $("#saved-recipes").empty();
+                    $("#saved-recipes-card-view").empty();
                     loadList();
                 }
 
@@ -256,7 +256,7 @@ $(document).ready(function () {
                     newCardContentDiv.append(cardContentPTag);
 
                     newCardDiv.append(newCardImageDiv, newCardContentDiv);
-                    $("#saved-recipes").append(newCardDiv);
+                    $("#saved-recipes-card-view").append(newCardDiv);
                 
                 }
             }
@@ -327,7 +327,7 @@ $(document).ready(function () {
                     newUl.append(newLi);
                 }
 
-                $("#saved-recipes").append(newUl);
+                $("#saved-recipes-list-view").append(newUl);
                 $(document).ready(function() {
                     $('.collapsible').collapsible();
                 });
