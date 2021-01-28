@@ -217,6 +217,7 @@ $(document).ready(function () {
         $("#modal-recipe-name").empty();
         $("#modal-recipe-ingredients").empty();
         $("#modal-recipe-instructions").empty();
+        $("#modal-recipe-delete").empty();
     }
 
 
@@ -233,12 +234,12 @@ $(document).ready(function () {
                 console.log(switchState);
                 if(switchState) {
                     //Card View!!!
-                    $("#saved-recipes").empty();
+                    $("#saved-recipes-list-view").empty();
                     loadCards();
                 }
                 else {
                     //List View!!!
-                    $("#saved-recipes").empty();
+                    $("#saved-recipes-card-view").empty();
                     loadList();
                 }
 
@@ -250,6 +251,8 @@ $(document).ready(function () {
 
             function loadCards() {
 
+                $("#saved-recipes-card-view").empty();
+                
                 for(i = 0; i < savedRecipesArray.length; i++) {
 
                     var newCardDiv = $("<div>").addClass("card");
@@ -265,12 +268,14 @@ $(document).ready(function () {
                     newCardContentDiv.append(cardContentPTag);
 
                     newCardDiv.append(newCardImageDiv, newCardContentDiv);
-                    $("#saved-recipes").append(newCardDiv);
+                    $("#saved-recipes-card-view").append(newCardDiv);
                 
                 }
             }
 
             function loadList() {
+
+                $("#saved-recipes-list-view").empty();
             
                 for(i = 0; i< savedRecipesArray.length; i++) {
                     console.log(savedRecipesArray[i].recipeObject.strMeasure1);
@@ -322,7 +327,7 @@ $(document).ready(function () {
                     newUl.append(newLi);
                 }
 
-                $("#saved-recipes").append(newUl);
+                $("#saved-recipes-list-view").append(newUl);
                 $(document).ready(function() {
                     $('.collapsible').collapsible();
                 });
@@ -330,7 +335,7 @@ $(document).ready(function () {
             }
 
             $(document).on("click", ".open-recipe-modal", function () {
-                // clearRecipeModal();
+                clearRecipeModal();
         
                 $("#modal-recipe-div").modal("open");
         
@@ -367,7 +372,7 @@ $(document).ready(function () {
         
                 $("#modal-recipe-instructions").text(currentRecipe.strInstructions);
 
-                var deleteRecipe = $("<a>").attr("data-value", i).attr("href", "#!").addClass("delete-recipe-button").text("Delete Recipe");
+                var deleteRecipe = $("<a>").attr("data-value", indexOfSavedRecipe).attr("href", "#!").addClass("delete-recipe-button").text("Delete Recipe");
 
                 $("#modal-recipe-delete").append(deleteRecipe);
             });
@@ -376,6 +381,7 @@ $(document).ready(function () {
                 console.log(savedRecipesArray);
                 savedRecipesArray.splice(this.dataset.value, 1);
                 localStorage.setItem("savedRecipesArray", JSON.stringify(savedRecipesArray));
+                console.log(this);
                 $("#modal-recipe-div").modal("close");
                 checkSwitch();
             })

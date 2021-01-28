@@ -59,9 +59,17 @@ nav {
     padding-left: 11px;
 }
 
-.card {
-    max-width: 700px;
-}
+/* #saved-recipes-card-view {
+    column-count: 4;
+    column-gap: 25px;
+    column-fill: auto;
+    
+} */
+
+/* .card {
+    column-fill: balance;
+     
+} */
 
 #card-recipe-name {
     font-weight: bold;
@@ -88,6 +96,7 @@ nav {
     height: auto;
     width: 100%;
 }
+
 /* ----------- */
 
 /* Breweries page styling */
