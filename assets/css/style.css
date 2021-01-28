@@ -58,16 +58,18 @@ nav {
 #submit-button {
     padding-left: 11px;
 }
-#saved-recipes-card-view {
+
+/* #saved-recipes-card-view {
     column-count: 4;
     column-gap: 25px;
     column-fill: auto;
     
-}
-.card {
+} */
+
+/* .card {
     column-fill: balance;
      
-}
+} */
 
 #card-recipe-name {
     font-weight: bold;
