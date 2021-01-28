@@ -6,12 +6,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
-    <title>Saved Recipes</title>
+    <title>quarantini's</title>
 </head>
 <body id="body">
     <nav>
         <div class="nav-wrapper">
-            <a class="brand-logo" id="website-logo">Alcohol Website</a>
+            <a class="brand-logo" id="website-logo">quarantini's</a>
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="right hide-on-med-and-down">
                 <li><a href="saved-recipes.html">Saved Recipes</a></li>
@@ -41,6 +41,15 @@
                 </div>
                 <hr>
                 <div id="saved-recipes"></div>
+                <div id="modal-recipe-div" class="modal">
+                    <div class="modal-content">
+                      <img id="modal-recipe-image">
+                      <h4 id="modal-recipe-name"></h4>
+                      <ul id="modal-recipe-ingredients"></ul>
+                      <p id="modal-recipe-instructions"></p>
+                    </div>
+                    <div id="modal-recipe-delete" class="modal-footer"></div>
+                </div>
             </div>
         </div>
     </div>

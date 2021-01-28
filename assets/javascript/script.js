@@ -136,8 +136,6 @@ $(document).ready(function () {
                 var drinkImage = $("<img>");
                 drinkImage.attr("src", fullRecipeResponse.drinks[0].strDrinkThumb);
 
-                // var newTitleSpan = $("<span>").addClass("card-title").text(fullRecipeResponse.drinks[0].strDrink);
-
                 newCardImageDiv.html("<a class='open-recipe btn-floating halfway-fab waves-effect waves-light red' href='#modal-recipe-div'data-value=" + JSON.stringify(fullRecipeResponse.drinks[0].strDrink) + "><i class='material-icons'>add</i></a>").append(drinkImage)
 
                 var newCardContentDiv = $("<div>").addClass("card-content");
@@ -198,8 +196,17 @@ $(document).ready(function () {
         if(localStorageArray !== null) {
             savedRecipesArray = localStorageArray;
         }
-        
-        savedRecipesArray.push(temporaryRecipeArray[indexOfSavedRecipe]);
+
+        var nameCount = 0;
+
+        for(i = 0; i < savedRecipesArray.length; i++) {
+            if(savedRecipesArray[i].name === temporaryRecipeArray[indexOfSavedRecipe].name) {
+                nameCount++;
+            }
+        }
+        if(nameCount < 1) {
+            savedRecipesArray.push(temporaryRecipeArray[indexOfSavedRecipe]);
+        }
         
         localStorage.setItem("savedRecipesArray", JSON.stringify(savedRecipesArray));
 
@@ -218,9 +225,9 @@ $(document).ready(function () {
 
             var savedRecipesArray = JSON.parse(localStorage.getItem("savedRecipesArray"));
 
-            loadList();
-
-            $("#view-switch").on("click", function() {
+            checkSwitch();
+            
+            function checkSwitch() {
 
                 var switchState = $("#view-switch").prop("checked");
                 console.log(switchState);
@@ -235,6 +242,10 @@ $(document).ready(function () {
                     loadList();
                 }
 
+            }
+
+            $(document).on("click", "#view-switch", function() {
+                checkSwitch();
             });
 
             function loadCards() {
@@ -247,9 +258,7 @@ $(document).ready(function () {
                     var drinkImage = $("<img>");
                     drinkImage.attr("src", savedRecipesArray[i].recipeObject.strDrinkThumb);
 
-                    // var newTitleSpan = $("<span>").addClass("card-title").text(savedRecipesArray[i].recipeObject.strDrink);
-
-                    newCardImageDiv.html("<a class='open-recipe btn-floating halfway-fab waves-effect waves-light red' href='#modal-recipe-div'data-value=" + JSON.stringify(savedRecipesArray[i].recipeObject.strDrink) + "><i class='material-icons'>add</i></a>").append(drinkImage);
+                    newCardImageDiv.html("<a class='open-recipe-modal btn-floating halfway-fab waves-effect waves-light red' href='#modal-recipe-div'data-value=" + JSON.stringify(savedRecipesArray[i].recipeObject.strDrink) + "><i class='material-icons'>add</i></a>").append(drinkImage);
 
                     var newCardContentDiv = $("<div>").addClass("card-content");
                     var cardContentPTag = $("<p>").text(savedRecipesArray[i].recipeObject.strDrink).addClass("center").attr("id", "card-recipe-name");
@@ -262,23 +271,7 @@ $(document).ready(function () {
             }
 
             function loadList() {
-                
-                //! Original table version
-                // var newTable = $("<table>");
-                // var newTableHead = newTable.html("<thead><tr><th>Recipe Name</th><th>Another List Item</th><th>And another</th></tr></thead>");
-                // var newTableBody = $("<tbody>");
-                // var anotherListItemPlaceholder = "stuff here";
-                // var andAnother = "more stuff here";
-                
-                // for(i = 0; i < savedRecipesArray.length; i++) {
-                //     var newTR = $("<tr>");
-                //     newTR.html("<td>" + savedRecipesArray[i].name + "</td><td>" + anotherListItemPlaceholder + "</td><td>" + andAnother + "</td>");
-                //     newTableBody.append(newTR);
-                // }
-
-                // newTable.append(newTableHead, newTableBody);
-
-                //Todo Trying a collapsible list instead.
+            
                 for(i = 0; i< savedRecipesArray.length; i++) {
                     console.log(savedRecipesArray[i].recipeObject.strMeasure1);
                 }
@@ -320,7 +313,9 @@ $(document).ready(function () {
                     var instructionsPTag = $("<p>");
                     instructionsPTag.text(savedRecipesArray[i].recipeObject.strInstructions);
 
-                    bodyDiv.append(drinkImage, ingredientsList, instructionsPTag);
+                    var deleteRecipe = $("<a>").attr("data-value", i).attr("href", "#!").addClass("delete-recipe-button").text("Delete Recipe");
+
+                    bodyDiv.append(drinkImage, ingredientsList, instructionsPTag, deleteRecipe);
 
                     newLi.append(headerDiv, bodyDiv);
 
@@ -334,6 +329,57 @@ $(document).ready(function () {
                 
             }
 
+            $(document).on("click", ".open-recipe-modal", function () {
+                // clearRecipeModal();
+        
+                $("#modal-recipe-div").modal("open");
+        
+                var currentRecipe;
+                var indexOfSavedRecipe;
+        
+                for (i = 0; i < savedRecipesArray.length; i++) {
+                    if (savedRecipesArray[i].name === this.dataset.value) {
+                        indexOfSavedRecipe = i;
+                        currentRecipe = savedRecipesArray[i].recipeObject;
+                    }
+                }
+        
+                $("#modal-recipe-image").attr("src", currentRecipe.strDrinkThumb);
+        
+                $("#modal-recipe-name").text(currentRecipe.strDrink);
+        
+                var ingredientCount = 1;
+                var ingredientProp;
+                while (currentRecipe[ingredientProp] !== null) {
+                    ingredientProp = "strIngredient" + ingredientCount;
+        
+                    var measureProp = "strMeasure" + ingredientCount;
+        
+                    if (currentRecipe[ingredientProp] !== null && currentRecipe[measureProp] !== null) {
+                        var newIngredientsListItem = $("<li>").text(currentRecipe[ingredientProp] + " - " + currentRecipe[measureProp]);
+                    }
+                    else if (currentRecipe[measureProp] !== null) {
+                        var newIngredientsListItem = $("<li>").text(currentRecipe[ingredientProp]);
+                    }
+                    $("#modal-recipe-ingredients").append(newIngredientsListItem);
+                    ingredientCount++;
+                }
+        
+                $("#modal-recipe-instructions").text(currentRecipe.strInstructions);
+
+                var deleteRecipe = $("<a>").attr("data-value", i).attr("href", "#!").addClass("delete-recipe-button").text("Delete Recipe");
+
+                $("#modal-recipe-delete").append(deleteRecipe);
+            });
+
+            $(document).on("click", ".delete-recipe-button", function(){
+                console.log(savedRecipesArray);
+                savedRecipesArray.splice(this.dataset.value, 1);
+                localStorage.setItem("savedRecipesArray", JSON.stringify(savedRecipesArray));
+                $("#modal-recipe-div").modal("close");
+                checkSwitch();
+            })
+
         });
     }
 
@@ -342,18 +388,19 @@ $(document).ready(function () {
         $(document).ready(function() {
 
             var localBreweriesArray = [];
+            var marker;
 
             L.mapquest.key = '7XSOhvWh4m4dhAyhCMD2uBfSYK2XqGxv';
     
             var map = L.mapquest.map('map', {
-                center: [37.7749, -122.4194],
+                center: [39.8283, -98.5795],
                 layers: L.mapquest.tileLayer('map'),
-                zoom: 3
+                zoom: 4
             });
 
-            
+            var layerGroup = L.layerGroup().addTo(map);
 
-            // map.addControl(L.mapquest.control());
+            map.addControl(L.mapquest.control());
 
             $("#search-local-breweries").on("click", function() {
                 breweriesAPICall();
@@ -380,48 +427,47 @@ $(document).ready(function () {
                 }).done(function (response) {
 
                     console.log(response);
+                    localBreweriesArray = [];
 
                     for(i = 0; i < response.length; i++) {
 
                         var breweryLocationObject = {};
+                        var breweryOverallObject = {};
 
                         breweryLocationObject.lat = JSON.parse(response[i].latitude);
                         breweryLocationObject.lon = JSON.parse(response[i].longitude);
+                        breweryOverallObject.coords = breweryLocationObject;
+                        breweryOverallObject.fullinfo = response[i];
 
                         if(breweryLocationObject.lat !== null && breweryLocationObject.lng !== null) {
-                            localBreweriesArray.push(breweryLocationObject);
+                            localBreweriesArray.push(breweryOverallObject);
                         }
                         
                     }
                     
                     console.log(localBreweriesArray);
-                    // addMarkers();
+                    addMarkers(response);
                     addListOfBreweries(response);
                     
                 });
             }
 
-            //! This needs to be fixed and I can't figure it out!!!
+            // Adds markers to mapquest map and removes other markers if they exist. Stored in layer in map that can be cleared.
             function addMarkers() {
                 console.log(map);
-                // layerGroup.clearLayers();
 
-                // var layerGroup = L.layerGroup().addTo(map);
+                layerGroup.clearLayers();
+                
+                var layerGroupArray =  [];
 
                 for(i = 0; i < localBreweriesArray.length; i++) {
 
-                    var latlng = L.latLng(localBreweriesArray[i]);
-
-                    console.log(localBreweriesArray[i]);
-
-                    L.marker([localBreweriesArray[i]], {
+                    marker = L.marker(localBreweriesArray[i].coords, {
                         icon: L.mapquest.icons.marker(),
                         draggable: false
-                      }).bindPopup("").addTo(map);
+                      }).bindPopup(localBreweriesArray[i].fullinfo.name).addTo(layerGroup);
 
                 }
-
-                // map.fitBounds();
 
             }
 
