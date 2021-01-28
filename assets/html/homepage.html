@@ -6,12 +6,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
-    <title>quarantini's</title>
+    <title>quarantinis</title>
 </head>
 <body id="body">
   <nav>
     <div class="nav-wrapper">
-      <a href="#!" class="brand-logo" id="website-logo">quarantini's</a>
+      <a href="homepage.html" class="brand-logo" id="website-logo">quarantinis</a>
       <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul class="right hide-on-med-and-down">
         <li><a href="saved-recipes.html">Saved Recipes</a></li>
@@ -49,6 +49,14 @@
     </div>
     <div class="row">
       <div class="col s12 m6" id="modal-stuff">
+        <div id="brewery-popup-card" class="card-alert card blue lighten-5 hoverable">
+          <div class="card-content">
+              Primarily interested in beer? Check out breweries near you on the <a href="breweries.html">Breweries page.</a>
+          </div>
+          <button id="brewery-popup-card-close-button" type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">×</span>
+          </button>
+        </div>
         <div id="response-data"></div>
         <div id="modal-recipe-div" class="modal">
           <div class="modal-content">

@@ -2,10 +2,9 @@ $(document).ready(function () {
     $("#modal1").modal();
     $("#modal-recipe-div").modal();
 
-    var currentDay = new Date("yyyy-MM-dd hh:mm:ss");
     var oneHundredYearsPast = new Date();
     oneHundredYearsPast.setFullYear(oneHundredYearsPast.getFullYear() - 100);
-    var liquorArray = ["Vodka", "Gin", "Bourbon", "Whiskey", "Tequila", "Beer", "Wine"];
+    var liquorArray = ["Vodka", "Brandy", "Rum", "Gin", "Bourbon", "Whiskey", "Tequila", "Beer", "Wine"];
     var temporaryRecipeArray = [];
     var savedRecipesArray = [];
     var indexOfSavedRecipe;
@@ -17,9 +16,9 @@ $(document).ready(function () {
 
     $("#submit-birthday").on("click", function () {
         var usersBirthday = $("#user-birthday").val();
-        console.log(usersBirthday);
+
         var age = moment().diff(moment(usersBirthday, "LL"), "years");
-        console.log(age);
+
         if (usersBirthday !== "") {
             if (age < 21) {
                 $("#modal1").modal("open");
@@ -49,6 +48,10 @@ $(document).ready(function () {
             $("#liquor-list").append(newOption);
         }
     }
+
+    $("#brewery-popup-card-close-button").on("click", function() {
+        $("#brewery-popup-card").addClass("hide");
+    });
 
     //On click of the go button, the ajax call starts and takes value of liquor selector as input.
     $("#submitButton").on("click", function () {
@@ -130,7 +133,7 @@ $(document).ready(function () {
             }).done(function (fullRecipeResponse) {
                 console.log(fullRecipeResponse);
 
-                var newCardDiv = $("<div>").addClass("card");
+                var newCardDiv = $("<div>").addClass("card homepage-card hoverable");
 
                 var newCardImageDiv = $("<div>").addClass("card-image");
                 var drinkImage = $("<img>");
@@ -191,7 +194,6 @@ $(document).ready(function () {
 
     $(document).on("click", "#save-recipe-button", function () {
         var localStorageArray = JSON.parse(localStorage.getItem("savedRecipesArray"));
-        console.log(localStorageArray);
 
         if(localStorageArray !== null) {
             savedRecipesArray = localStorageArray;
@@ -231,7 +233,7 @@ $(document).ready(function () {
             function checkSwitch() {
 
                 var switchState = $("#view-switch").prop("checked");
-                console.log(switchState);
+
                 if(switchState) {
                     //Card View!!!
                     $("#saved-recipes-list-view").empty();
@@ -252,10 +254,10 @@ $(document).ready(function () {
             function loadCards() {
 
                 $("#saved-recipes-card-view").empty();
-                
+
                 for(i = 0; i < savedRecipesArray.length; i++) {
 
-                    var newCardDiv = $("<div>").addClass("card");
+                    var newCardDiv = $("<div>").addClass("card hoverable");
 
                     var newCardImageDiv = $("<div>").addClass("card-image");
                     var drinkImage = $("<img>");
@@ -276,11 +278,6 @@ $(document).ready(function () {
             function loadList() {
 
                 $("#saved-recipes-list-view").empty();
-            
-                for(i = 0; i< savedRecipesArray.length; i++) {
-                    console.log(savedRecipesArray[i].recipeObject.strMeasure1);
-                }
-                
 
                 var newUl = $("<ul>").addClass("collapsible");
 
@@ -299,8 +296,9 @@ $(document).ready(function () {
                     var ingredientsList = $("<ul>");
 
                     var ingredientCount = 1;
-                    var ingredientProp;
+                    var ingredientProp = 0;
                     while (savedRecipesArray[i].recipeObject[ingredientProp] !== null) {
+
                         ingredientProp = "strIngredient" + ingredientCount;
             
                         var measureProp = "strMeasure" + ingredientCount;
@@ -378,10 +376,10 @@ $(document).ready(function () {
             });
 
             $(document).on("click", ".delete-recipe-button", function(){
-                console.log(savedRecipesArray);
+
                 savedRecipesArray.splice(this.dataset.value, 1);
                 localStorage.setItem("savedRecipesArray", JSON.stringify(savedRecipesArray));
-                console.log(this);
+
                 $("#modal-recipe-div").modal("close");
                 checkSwitch();
             })
@@ -414,9 +412,7 @@ $(document).ready(function () {
             
             function breweriesAPICall() {
 
-                var state = "Kansas";
                 var city = $("#city-name").val();
-                var perPage = "";
                 var queryURL = "https://brianiswu-open-brewery-db-v1.p.rapidapi.com/breweries?per_page=50&by_city=" + city;
                 
                 $.ajax({
@@ -451,7 +447,6 @@ $(document).ready(function () {
                         
                     }
                     
-                    console.log(localBreweriesArray);
                     addMarkers(response);
                     addListOfBreweries(response);
                     
@@ -460,7 +455,6 @@ $(document).ready(function () {
 
             // Adds markers to mapquest map and removes other markers if they exist. Stored in layer in map that can be cleared.
             function addMarkers() {
-                console.log(map);
 
                 layerGroup.clearLayers();
                 
@@ -471,9 +465,14 @@ $(document).ready(function () {
                     marker = L.marker(localBreweriesArray[i].coords, {
                         icon: L.mapquest.icons.marker(),
                         draggable: false
-                      }).bindPopup(localBreweriesArray[i].fullinfo.name).addTo(layerGroup);
+                    }).bindPopup(localBreweriesArray[i].fullinfo.name).addTo(layerGroup);
+
+                    layerGroupArray.push(L.marker(localBreweriesArray[i].coords));
 
                 }
+
+                var group = L.featureGroup(layerGroupArray);
+                map.fitBounds(group.getBounds());
 
             }
 
@@ -499,7 +498,7 @@ $(document).ready(function () {
                         addressTd.text(response[i].street + ", " + response[i].city + ", " + response[i].state + " " + response[i].postal_code.slice(0, 5));
                     }
 
-                    var websiteTd = $("<td>");
+                    var websiteTd = $("<td>").addClass("website-urls");
                     var websiteATag = $("<a>");
                     if(response[i].website_url === "") {
                         websiteATag.text("unavailable");
