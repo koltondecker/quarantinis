@@ -8,6 +8,14 @@ nav {
     padding-left: 21px;
 }
 
+.logo-image {
+    width: auto;
+    height: 35px;
+    overflow: hidden;
+    margin-left: -5px;
+    margin-top: 10px;
+}
+
 #body {
     background-color: #7077930a;
 }
