@@ -4,7 +4,7 @@ $(document).ready(function () {
 
     var oneHundredYearsPast = new Date();
     oneHundredYearsPast.setFullYear(oneHundredYearsPast.getFullYear() - 100);
-    var liquorArray = ["Vodka", "Brandy", "Rum", "Gin", "Bourbon", "Whiskey", "Tequila", "Beer", "Wine"];
+    var liquorArray = ["Vodka", "Brandy", "Rum", "Gin", "Bourbon", "Whiskey", "Scotch", "Tequila", "Beer", "Wine"];
     var temporaryRecipeArray = [];
     var savedRecipesArray = [];
     var indexOfSavedRecipe;
@@ -173,7 +173,7 @@ $(document).ready(function () {
         $("#modal-recipe-name").text(currentRecipe.strDrink);
 
         var ingredientCount = 1;
-        var ingredientProp;
+        var ingredientProp = 0;
         while (currentRecipe[ingredientProp] !== null) {
             ingredientProp = "strIngredient" + ingredientCount;
 
