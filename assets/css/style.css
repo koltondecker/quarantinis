@@ -15,6 +15,10 @@ nav {
 .container {
     font-family: Arial, Helvetica, sans-serif;
 }
+
+.hide {
+    display: none;
+}
 /* ----------- */
 
 /* Landing page styling. */
@@ -59,17 +63,27 @@ nav {
     padding-left: 11px;
 }
 
-/* #saved-recipes-card-view {
-    column-count: 4;
-    column-gap: 25px;
-    column-fill: auto;
-    
+#modal-stuff {
+    padding-left: 23px;
+}
+
+#brewery-popup-card-close-button {
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+}
+
+/* #response-data {
+    display: flex;
+    flex-wrap: wrap;
 } */
 
-/* .card {
-    column-fill: balance;
-     
-} */
+.homepage-card {
+    /* float: left; */
+}
 
 #card-recipe-name {
     font-weight: bold;
@@ -85,10 +99,6 @@ nav {
     width: 100%;
     max-width: 600px;
 }
-
-#modal-stuff {
-    padding-left: 23px;
-}
 /* ----------- */
 
 /* Saved recipes page styling */
@@ -97,6 +107,21 @@ nav {
     width: 100%;
 }
 
+.card {
+    max-width: 600px;
+}
+
+/* #saved-recipes-card-view {
+    column-count: 3;
+    column-gap: 25px;
+    column-fill: auto;
+}
+
+.card {
+    display: inline-block;
+    column-fill: balance;
+     
+} */
 /* ----------- */
 
 /* Breweries page styling */
@@ -106,5 +131,10 @@ nav {
 
 #insert-city-name {
     color:  #2e3047;
+}
+
+.website-urls {
+    overflow-wrap: break-word;
+    word-break: break-all;
 }
 /* ----------- */
