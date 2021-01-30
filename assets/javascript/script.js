@@ -155,7 +155,7 @@ $(document).ready(function () {
 
     //TODO: Add functionality to the card button.
     $(document).on("click", ".open-recipe", function () {
-        // clearRecipeModal();
+        clearRecipeModal();
 
         $("#modal-recipe-div").modal("open");
 

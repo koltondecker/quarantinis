@@ -4,18 +4,19 @@
 
 ## Application
 
-<!-- Insert a backstory here with why this project was built and what purpose it serves. 
-Mention different features of the application that help provide a genuine user experience 
-and make it stand out. -->
+A significant (and potentially the most important) part of the bar experience is ….well the drinks. UNFORTUNATELY, a pandemic that has been ravaging the nation makes attending bars a little more complicated and risky. Never fear though, Quartini is here to save the day (or the night rather).
+So what is Quartini you ask?  
+Quartini is a platform that provides cocktail suggestions (and their accompanying recipes) based on a user’s selected base liquor. Off from work and need a stiff whiskey cocktail help you ease into the night? Quaratini has you covered. Need a rum cocktail to pair with that jerk chicken recipe you randomly found on instagram? Quartini also has you covered. Finally brave enough to make that shaky taco recipe for your wife but want to guarantee that she at least enjoys the tequila? Guess what - Quaratini has you covered. 
+Safely capture a part of the bar experience from the confines of your home and give Quaritini a shot!
+(PS: Did we mention that you can store cocktails recipes you liked for future reference?)
 
+## User Story (Draft)
 
-## User Story
-
-```
-AS A lover of new inspiring alcohol concoctions
-I WANT to expand my mini bar and cocktail making capabilities with random recipes
-SO THAT I can keep my evenings open and my options exciting
-```
+‘’’
+AS A prisoner to the pandemic
+I WANT to discover and store drink recipes based on my selected criteria   
+SO THAT I can have a damn drink without having to potentially expose myself to a deadly virus.
+‘’’’
 
 ## Functionality Criteria
 
@@ -180,3 +181,8 @@ The following demonstrates the application functionality:
 <br>
 <br>
 
+## Sources:
+
+The Cocktail DB API - https://www.thecocktaildb.com/
+
+OpenBreweryDB API -  https://www.openbrewerydb.org/
