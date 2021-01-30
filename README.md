@@ -1,6 +1,6 @@
 # quarantinis: A Cocktail Generator 
 
-<strong>View Deployed Project here:<strong> https://koltondecker.github.io/Project-1/
+<strong>View Deployed Project here:<strong> https://koltondecker.github.io/quarantinis/
 
 ## Application
 
