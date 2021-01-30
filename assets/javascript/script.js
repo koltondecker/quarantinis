@@ -2,6 +2,7 @@ $(document).ready(function () {
     $("#modal1").modal();
     $("#modal-recipe-div").modal();
 
+    //Declared variables
     var oneHundredYearsPast = new Date();
     oneHundredYearsPast.setFullYear(oneHundredYearsPast.getFullYear() - 100);
     var liquorArray = ["Vodka", "Brandy", "Rum", "Gin", "Bourbon", "Whiskey", "Scotch", "Tequila", "Beer", "Wine"];
@@ -9,14 +10,17 @@ $(document).ready(function () {
     var savedRecipesArray = [];
     var indexOfSavedRecipe;
 
+    //Initial call to load liquors list on the homepage.
     loadLiquors();
 
     //Materialize method call that runs the datepicker for the landing page with a range of 100 years passed in.
     $('.datepicker').datepicker({ yearRange: 100, minDate: oneHundredYearsPast, maxDate: new Date() });
 
+    //On click event for the submit button on landing page that takes in the date to calculate age based on current day. If 21, page automatically switches to homepage.
     $("#submit-birthday").on("click", function () {
         var usersBirthday = $("#user-birthday").val();
 
+        //Moment.js is used to calculate age.
         var age = moment().diff(moment(usersBirthday, "LL"), "years");
 
         if (usersBirthday !== "") {
@@ -49,12 +53,14 @@ $(document).ready(function () {
         }
     }
 
+    //Document on click event to fix issue on mobile where liquor list dropdown selects wrong value.
     $(document).click(function(){
         $('li[id^="select-options"]').on('touchend', function (e) {
             e.stopPropagation();
         });
     });
 
+    //On click to dismiss the brewery link popup card.
     $("#brewery-popup-card-close-button").on("click", function() {
         $("#brewery-popup-card").addClass("hide");
     });
@@ -68,6 +74,7 @@ $(document).ready(function () {
 
         var queryUrl = "https://the-cocktail-db.p.rapidapi.com/filter.php?i=" + liquorSelection;
 
+        //Ajax call to the cocktail db api that then calls the AddRecipeToPage function.
         $.ajax({
             "async": true,
             "crossDomain": true,
@@ -91,7 +98,6 @@ $(document).ready(function () {
         var recipeDiv = $("#response-data");
         var currentRecipeObject;
 
-        //TODO: Need to fix issue with random number generator for cocktail recipe pulling up same recipe more than once.
         var currentRandomNumberArray = [];
 
         if (response.drinks.length <= recipeCount) {
@@ -115,6 +121,7 @@ $(document).ready(function () {
             }
         }
 
+        //This function saves all recipes on page to a temporary array of objects to then access for click events.
         function sendRecipesToTempArray(currentRecipeObject) {
             var recipeName = currentRecipeObject.strDrink;
             var currentRecipeObject = {
@@ -124,6 +131,9 @@ $(document).ready(function () {
             temporaryRecipeArray.push(currentRecipeObject);
         }
 
+        //To get the full recipe from cocktail db, a second ajax call is made with the specific id of a drink that is selected by user and grabbed from temporary array.
+        //This returned response is then used to load content into modal for full recipe in the onclick event following this function.
+        //Cards are dynamically created and added to page in this function.
         function recipeAjaxCall(i) {
             var queryUrl = "https://the-cocktail-db.p.rapidapi.com/lookup.php?i=" + response.drinks[i].idDrink;
 
@@ -159,7 +169,7 @@ $(document).ready(function () {
         }
     }
 
-    //TODO: Add functionality to the card button.
+    //On click of plus button opens a modal and populates data from object stored in temporary array.
     $(document).on("click", ".open-recipe", function () {
         clearRecipeModal();
 
@@ -198,6 +208,7 @@ $(document).ready(function () {
         $("#modal-recipe-instructions").text(currentRecipe.strInstructions);
     });
 
+    // On click event for saving a recipe pushes an object to local storage with name of recipe and full recipe response object from api call.
     $(document).on("click", "#save-recipe-button", function () {
         var localStorageArray = JSON.parse(localStorage.getItem("savedRecipesArray"));
 
@@ -220,6 +231,7 @@ $(document).ready(function () {
 
     });
 
+    //Modal is cleared with this function so new information can be loaded. 
     function clearRecipeModal() {
         $("#modal-recipe-image").removeClass("src");
         $("#modal-recipe-name").empty();
@@ -228,12 +240,14 @@ $(document).ready(function () {
         $("#modal-recipe-delete").empty();
     }
 
-
+    //Checks if saved recipes page is loaded. Had issues with things executing before page load otherwise.
     if (document.URL.includes("saved-recipes.html")) {
         $(document).ready(function() {
 
+            //Grabs local storage data on load.
             var savedRecipesArray = JSON.parse(localStorage.getItem("savedRecipesArray"));
 
+            //Calls function to check what value the toggle switch is on.
             checkSwitch();
             
             function checkSwitch() {
@@ -253,10 +267,12 @@ $(document).ready(function () {
 
             }
 
+            //On click of toggle switch, checkswitch function is called again.
             $(document).on("click", "#view-switch", function() {
                 checkSwitch();
             });
 
+            //this function loads cards to page based on saved recipe data when toggle is switched to card view.
             function loadCards() {
 
                 $("#saved-recipes-card-view").empty();
@@ -281,6 +297,7 @@ $(document).ready(function () {
                 }
             }
 
+            //this function loads a collapsible list to page based on saved recipes from local storage when toggle is switched to list view.
             function loadList() {
 
                 $("#saved-recipes-list-view").empty();
@@ -301,6 +318,8 @@ $(document).ready(function () {
 
                     var ingredientsList = $("<ul>");
 
+                    //This while loop checks through response object for both ingredients and measurements that are stored separately in the object in weird ways. 
+                    //Checks for null values and only returns populated information and appends to list.
                     var ingredientCount = 1;
                     var ingredientProp = 0;
                     while (savedRecipesArray[i].recipeObject[ingredientProp] !== null) {
@@ -338,6 +357,7 @@ $(document).ready(function () {
                 
             }
 
+            //Opens modal of recipe when plus button is pressed on saved recipes page.
             $(document).on("click", ".open-recipe-modal", function () {
                 clearRecipeModal();
         
@@ -357,6 +377,7 @@ $(document).ready(function () {
         
                 $("#modal-recipe-name").text(currentRecipe.strDrink);
         
+                //While loop is used again to check for ingredients and measurements and add info to modal.
                 var ingredientCount = 1;
                 var ingredientProp;
                 while (currentRecipe[ingredientProp] !== null) {
@@ -381,6 +402,7 @@ $(document).ready(function () {
                 $("#modal-recipe-delete").append(deleteRecipe);
             });
 
+            //On click of delete recipe button, recipe is removed from local storage and page is reloaded to only show saved recipes.
             $(document).on("click", ".delete-recipe-button", function(){
 
                 savedRecipesArray.splice(this.dataset.value, 1);
@@ -393,29 +415,34 @@ $(document).ready(function () {
         });
     }
 
-
+    //Checks if saved breweries page is loaded. Had issues with things executing before page load otherwise.
     if(document.URL.includes("breweries.html")) {
         $(document).ready(function() {
 
             var localBreweriesArray = [];
             var marker;
 
+            //API Key for mapquest.
             L.mapquest.key = '7XSOhvWh4m4dhAyhCMD2uBfSYK2XqGxv';
     
+            //Initial loading of mapquest map focused on United States.
             var map = L.mapquest.map('map', {
                 center: [39.8283, -98.5795],
                 layers: L.mapquest.tileLayer('map'),
                 zoom: 4
             });
 
+            //Creates a layergroup that can be manipulated and doesn't affect main map layer.
             var layerGroup = L.layerGroup().addTo(map);
 
             map.addControl(L.mapquest.control());
 
+            //calls breweries api call function on click of search city button.
             $("#search-local-breweries").on("click", function() {
                 breweriesAPICall();
             });
             
+            //This function calls the Open Breweries DB api based on searched city of user and returns a list of up to 50 breweries in that city. 
             function breweriesAPICall() {
 
                 var city = $("#city-name").val();
@@ -453,6 +480,7 @@ $(document).ready(function () {
                         
                     }
                     
+                    //Calls 2 functions, 1 to add markers to the map of locations found with coordinates available and 2 to add the list info to page.
                     addMarkers(response);
                     addListOfBreweries(response);
                     
@@ -462,10 +490,12 @@ $(document).ready(function () {
             // Adds markers to mapquest map and removes other markers if they exist. Stored in layer in map that can be cleared.
             function addMarkers() {
 
+                //Clears previous markers from map when function is called.
                 layerGroup.clearLayers();
                 
                 var layerGroupArray =  [];
 
+                //Loops through api response and adds markers for all locations with coordinates.
                 for(i = 0; i < localBreweriesArray.length; i++) {
 
                     marker = L.marker(localBreweriesArray[i].coords, {
@@ -477,11 +507,13 @@ $(document).ready(function () {
 
                 }
 
+                //Creates a layer group and fits the bounds of the map view to shown markers.
                 var group = L.featureGroup(layerGroupArray);
                 map.fitBounds(group.getBounds());
 
             }
 
+            //Adds table body information to page of located breweries in city.
             function addListOfBreweries(response) {
 
                 $("#brewery-list-body").empty();
